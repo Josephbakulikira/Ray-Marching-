@@ -4,13 +4,22 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 [RequireComponent(typeof(Camera))]
-public class CameraController : MonoBehaviour
+public class CameraController : SceneViewFilter
 {
     private Material r_material;
     public float r_maxDistance;
+    public Vector3 r_modInterval;
     public Vector4 r_sphere;
+    public Vector4 r_box;
+    public Vector4 r_sphere2;
+    public float r_boxSphereSmooth;
+    public float r_boxRound;
+    public float r_sphereIntersectSmooth;
+
     public Transform r_light;
+    public Color r_color;
     [SerializeField]
+
     private Shader r_shader;
 
     public Material raymarchingMaterial
@@ -25,6 +34,7 @@ public class CameraController : MonoBehaviour
             return r_material;
         }
     }
+
     private Camera r_camera;
     public Camera raymarchingCamera {
         get { 
@@ -46,9 +56,19 @@ public class CameraController : MonoBehaviour
         raymarchingMaterial.SetMatrix("r_cameraFrustum", cameraFrustum(raymarchingCamera));
         raymarchingMaterial.SetMatrix("r_cameraToWorld", raymarchingCamera.cameraToWorldMatrix);
         raymarchingMaterial.SetFloat("r_maxdistance", r_maxDistance);
+        raymarchingMaterial.SetVector("r_modInterval", r_modInterval);
         raymarchingMaterial.SetVector("r_sphere", r_sphere);
+        raymarchingMaterial.SetVector("r_box", r_box);
+        raymarchingMaterial.SetVector("r_sphere2", r_sphere2);
+        raymarchingMaterial.SetFloat("r_boxRound", r_boxRound);
+        raymarchingMaterial.SetFloat("r_boxSphereSmooth", r_boxSphereSmooth);
+        raymarchingMaterial.SetFloat("r_sphereIntersectSmooth", r_sphereIntersectSmooth);
+        raymarchingMaterial.SetColor("r_mainColor", r_color);
 
         RenderTexture.active = destination;
+
+        raymarchingMaterial.SetTexture("_MainTex", source);
+
         GL.PushMatrix();
         GL.LoadOrtho();
         raymarchingMaterial.SetPass(0);
