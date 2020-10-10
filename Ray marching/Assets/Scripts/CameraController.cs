@@ -15,13 +15,32 @@ public class CameraController : SceneViewFilter
     public float r_boxSphereSmooth;
     public float r_boxRound;
     public float r_sphereIntersectSmooth;
-
+    public float r_shadowIntensity;
+    public float r_lightIntensity;
+    public Vector2 r_shadowDistance;
+    public Color r_lightColor;
+    public float r_shadowPenumbra;
+    public int r_maxIterations;
+    public float r_accuracy;
     public Transform r_light;
     public Color r_color;
+    public int r_ambientIterations;
+    public float r_ambientIntesity;
+    public float r_ambientSteps;
+
+
+    public Vector4 r_sphere4;
+    public float r_sphereSmooth;
+    public float r_degreeRotate;
+    public float r_rotationDegree;
+
+    public int r_reflectionCount;
+    public float r_reflectionIntensity;
+    public float r_environmentIntensity;
+    public Cubemap r_reflectionCube;
+
     [SerializeField]
-
     private Shader r_shader;
-
     public Material raymarchingMaterial
     {
         get
@@ -34,7 +53,7 @@ public class CameraController : SceneViewFilter
             return r_material;
         }
     }
-
+    
     private Camera r_camera;
     public Camera raymarchingCamera {
         get { 
@@ -52,18 +71,39 @@ public class CameraController : SceneViewFilter
             Graphics.Blit(source, destination);
             return;
         }
+        
+        raymarchingMaterial.SetInt("r_maxIterations", r_maxIterations);
+        raymarchingMaterial.SetFloat("r_accuracy", r_accuracy);
+        raymarchingMaterial.SetColor("r_mainColor", r_color);
+        raymarchingMaterial.SetVector("r_sphere", r_sphere);
+        raymarchingMaterial.SetVector("r_box", r_box);
         raymarchingMaterial.SetVector("r_light", r_light ? r_light.forward : Vector3.down);
+        
+        raymarchingMaterial.SetColor("r_lightColor", r_lightColor);
+        raymarchingMaterial.SetFloat("r_lightIntensity", r_lightIntensity);
+        raymarchingMaterial.SetFloat("r_shadowIntensity", r_shadowIntensity);
+        raymarchingMaterial.SetFloat("r_shadowPenumbra", r_shadowPenumbra);
+        raymarchingMaterial.SetVector("r_shadowDistance", r_shadowDistance);
+        raymarchingMaterial.SetInt("r_ambientIterations", r_ambientIterations);
+        raymarchingMaterial.SetFloat("r_ambientSteps", r_ambientSteps);
+        raymarchingMaterial.SetFloat("r_ambientIntesity", r_ambientIntesity);
+        raymarchingMaterial.SetVector("r_sphere4", r_sphere4);
+        raymarchingMaterial.SetFloat("r_sphereSmooth", r_sphereSmooth);
+        raymarchingMaterial.SetFloat("r_degreeRotate", r_degreeRotate);
+
         raymarchingMaterial.SetMatrix("r_cameraFrustum", cameraFrustum(raymarchingCamera));
         raymarchingMaterial.SetMatrix("r_cameraToWorld", raymarchingCamera.cameraToWorldMatrix);
         raymarchingMaterial.SetFloat("r_maxdistance", r_maxDistance);
         raymarchingMaterial.SetVector("r_modInterval", r_modInterval);
-        raymarchingMaterial.SetVector("r_sphere", r_sphere);
-        raymarchingMaterial.SetVector("r_box", r_box);
         raymarchingMaterial.SetVector("r_sphere2", r_sphere2);
         raymarchingMaterial.SetFloat("r_boxRound", r_boxRound);
         raymarchingMaterial.SetFloat("r_boxSphereSmooth", r_boxSphereSmooth);
         raymarchingMaterial.SetFloat("r_sphereIntersectSmooth", r_sphereIntersectSmooth);
-        raymarchingMaterial.SetColor("r_mainColor", r_color);
+
+        raymarchingMaterial.SetInt("r_reflectionCount", r_reflectionCount);
+        raymarchingMaterial.SetFloat("r_reflectionIntensity", r_reflectionIntensity);
+        raymarchingMaterial.SetFloat("r_environmentIntensity", r_environmentIntensity);
+        raymarchingMaterial.SetTexture("r_reflectionCube", r_reflectionCube);
 
         RenderTexture.active = destination;
 

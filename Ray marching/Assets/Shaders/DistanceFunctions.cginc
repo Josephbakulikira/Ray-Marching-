@@ -16,6 +16,7 @@ float sdBox(float3 p, float3 b)
 		length(max(d, 0.0));
 }
 
+
 float sdRoundBox(in float3 p, in float3 b, in float r) {
 	float3 q = abs(p) - b;
 	return min(max(q.x, max(q.y, q.z)), 0.0) + length(max(q, 0.0)) - r;
